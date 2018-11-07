@@ -1,0 +1,35 @@
+<?php
+return [
+    'CFC' => [
+        /*
+        'adapter' => [
+            'driver' => 'pdo_mysql',
+            'dbname' => '<databasename>',
+            'user' => '<username>',
+            'password' => '<password>',
+            'host' => 'localhost',
+            //'unix_socket' => '/var/run/mysqld/mysqld.sock',
+            'charset' => 'utf8',
+        ],
+        */
+        // For test purpose only
+        'adapter' => [
+            'driver' => 'pdo_sqlite',
+            'database' => __DIR__.'/../../tests/events.sqlite3'
+        ],
+        'geocoding' => [
+            'geocoders' => [
+                'geonames' => [
+                    'userName' => '<geonames username>',
+                ],
+                'nominatim' => [
+                    'rootUrl' => 'https://nominatim.openstreetmap.org',
+                    'userAgent' => '<your user-agent>',
+                ],
+            ],
+            'cache' => [
+                'cache_dir' => __DIR__.'/../../cache',
+            ]
+        ]
+    ]
+];

@@ -1,0 +1,9 @@
+{
+    "name": "phpfacile/cfc-website-no-mvc",
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "require": {
+        "phpfacile/cfc-core": "^1.0.0",
+        "phpfacile/event-db-zend": "^1.0.0"
+    }
+}
