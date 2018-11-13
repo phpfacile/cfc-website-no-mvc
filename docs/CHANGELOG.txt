@@ -1,0 +1,1 @@
+* EVOL Events (with more fields) are now created with no geocoding and have to be approved (geocoding is done at this step)

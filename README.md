@@ -43,5 +43,6 @@ In that case, then open your web browser at http://localhost:8085/eventform.php
 
 ## Step 5 ##
 With your favorite web browser go to
-* /eventform.php To test the creation of a new event
+* /create-event.php To test the creation of a new event
+* /backoffice/validate-event.php To test the validation of an event
 * /json/events.php To test retrieval of the event list as JSON

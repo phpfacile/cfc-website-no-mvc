@@ -6,6 +6,7 @@ use CFC\Service\CfcService;
 use PHPFacile\Event\Db\Service\EventService;
 use PHPFacile\Geocoding\Service\GeocodingService;
 use PHPFacile\Geocoding\Db\Service\LocationService;
+use PHPFacile\Openstreetmap\Service\OpenstreetmapService;
 use Zend\Db\Adapter\Adapter;
 
 $cfg = include(__DIR__.'/../../config/autoload/local.php');
@@ -16,56 +17,78 @@ $geocodingService = new GeocodingService(
 );
 
 $adapter         = new Adapter($cfg['CFC']['adapter']);
+$eventService    = new EventService($adapter);
 $locationService = new LocationService($adapter);
-$eventService    = new EventService($adapter, $locationService);
+
+$openstreetmapService = new OpenstreetmapService();
+$locationService->setOpenstreetmapService($openstreetmapService);
+$eventService->setLocationService($locationService);
 $cfcService      = new CfcService();
 $cfcService->setEventService($eventService);
 $cfcService->setGeocodingService($geocodingService);
 
 // Retrieve POST data (JSON body)
-$jsonBody = file_get_contents('php://input');
-$event    = json_decode($jsonBody);
+$jsonBody        = file_get_contents('php://input');
+$eventSubmission = json_decode($jsonBody);
 
-// TODO Implement input data validity check
+if (property_exists($eventSubmission, 'id')) {
+    // FIXME Make sure the user is allowed to update the event
+    // instead of using this stupid test
+    if ('/backoffice/validate-event.php' === substr($_SERVER['HTTP_REFERER'], -30)) {
+        $place = $eventSubmission->event->location->place;
+        $locations = $cfcService->getGeocodingService()->getPlacesByCountryAndPlaceName($place->country->name, $place->name);
 
-$locations = $geocodingService->getPlacesByCountryAndPlaceName($event->country, $event->place);
-
-if (0 === count($locations)) {
-    echo json_encode([
-        'errs'    => [
-            ['code' => 'NO_PLACE_MATCH'],
-        ],
-    ]);
-} else if (property_exists($event, 'locationId') && (null !== $event->locationId)) {
-    $foundLocationId = false;
-    foreach ($locations as $location) {
-        // TAKE CARE Whereas $event->locationId is always a string $location->idProvider can be an integer
-        if (''.$location->idProvider === $event->locationId) {
-            $foundLocationId = true;
-
-            $cfcService->saveFormEvent($event, $location);
-
+        if (0 === count($locations)) {
             echo json_encode([
-                'errs'    => [
+                'errs' => [
+                    ['code' => 'NO_PLACE_MATCH'],
                 ],
+                'data' => [
+                    'query' => [
+                        'country' => $place->country->name,
+                        'place'   => $place->name,
+                    ]
+                ]
             ]);
+        } else if (property_exists($place, 'idProvider') && (null !== $place->idProvider)) {
+            $foundLocation = false;
+            foreach ($locations as $location) {
+                // TAKE CARE Whereas $event->locationId is always a string $location->idProvider can be an integer
+                if (''.$location->idProvider === $place->idProvider) {
+                    $foundLocation = true;
+
+                    $cfcService->updateAndValidateFormEventSubmission($eventSubmission, $location);
+
+                    echo json_encode([
+                        'errs'    => [
+                        ],
+                    ]);
+                }
+            }
+
+            if (false === $foundLocation) {
+                echo json_encode([
+                    'errs'    => [
+                        ['code' => 'PLACE_ID_NOT_WITHIN_LIST'],
+                    ],
+                    'data' => ['locations' => $locations],
+                ]);
+            }
+        } else {
+                echo json_encode([
+                    'errs'    => [
+                        ['code' => 'PLACE_TO_BE_SELECTED'],
+                    ],
+                    'data' => ['locations' => $locations],
+                ]);
         }
     }
-
-    if (false === $foundLocationId) {
-        echo json_encode([
-            'errs'    => [
-                ['code' => 'PLACE_ID_NOT_WITHIN_LIST'],
-            ],
-            'data' => ['locations' => $locations],
-        ]);
-    }
 } else {
-        echo json_encode([
-            'errs'    => [
-                ['code' => 'PLACE_TO_BE_SELECTED'],
-            ],
-            'data' => ['locations' => $locations],
-        ]);
+    $cfcService->saveNewFormEventSubmission($eventSubmission);
+
+    echo json_encode([
+        'errs'    => [
+        ],
+    ]);
 }
 ?>
