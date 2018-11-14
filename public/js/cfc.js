@@ -1,27 +1,45 @@
 function saveEvent()
 {
-    var name = $('#event_name').val().trim();
+    var locale = $('#locale').val().trim();
+    var userName = $('#user_name').val().trim();
+    var userEmail = $('#user_email').val().trim();
+    var eventName = $('#event_name').val().trim();
+    var eventUrl = $('#event_url').val().trim();
+    var eventType = $('#event_type').val().trim();
     var dateStart = $('#event_date_start').val().trim();
     var dateEnd = $('#event_date_end').val().trim();
-    var address = $('#event_address').val().trim();
-    var place = $('#event_place').val().trim();
-    var country = $('#event_country').val().trim();
+    //var address = $('#event_address').val().trim();
+    var eventPlace = $('#event_place').val().trim();
+    var countryName = $('#event_country option:selected').text().trim();
+    var countryCode = $('#event_country').val().trim();
+
+    var eventSubmissionId = null;
+    if ($('#event_submission_id').length > 0) {
+        eventSubmissionId = $('#event_submission_id').val().trim();
+    }
     var locationId = null;
     if ($('#event_location_id').length > 0) {
         locationId = $('#event_location_id').val().trim();
     }
 
-    console.log('Name=['+name+']');
-    console.log('Date (start)=['+dateStart+']');
-    console.log('Date (end)=['+dateEnd+']');
-    console.log('address=['+address+']');
-    console.log('place=['+place+']');
-    console.log('country=['+country+']');
+    console.log('Locale=['+locale+']');
+    console.log('User name=['+userName+']');
+    console.log('User email=['+userEmail+']');
+    console.log('Event name=['+eventName+']');
+    console.log('Event url=['+eventUrl+']');
+    console.log('Event type=['+eventType+']');
+    console.log('Event Date (start)=['+dateStart+']');
+    console.log('Event Date (end)=['+dateEnd+']');
+    //console.log('address=['+address+']');
+    console.log('Event place=['+eventPlace+']');
+    console.log('Event country Name=['+countryName+']');
+    console.log('Event country Code=['+countryCode+']');
+    console.log('eventSubmissionId=['+eventSubmissionId+']');
     console.log('locationId=['+locationId+']');
 
     // TODO Client side validation to be completed
     var feedback = $('#event_name_feedback');
-    if (5 > name.length) {
+    if (5 > eventName.length) {
         $(feedback).html('5 caractères minimum requis');
         //$(feedback).removeClass('valid-feedback');
         //$(feedback).addClass('invalid-feedback');
@@ -33,22 +51,43 @@ function saveEvent()
     $('#event_form').removeClass('needs-validation');
     $('#event_form').addClass('was-validated');
 
+    var eventSubmission = {};
+
+    eventSubmission.locale = locale;
+    if (null != eventSubmissionId) {
+        eventSubmission.id = eventSubmissionId;
+    }
+
+    var submitter = {};
+    submitter.name = userName;
+    submitter.email = userEmail;
+    eventSubmission.submitter = submitter;
+
     var event = {};
-    event.name = name;
+    event.name = eventName;
     event.dateStart = dateStart;
     event.dateEnd = dateEnd;
-    event.address = address;
-    event.place = place;
-    event.country = country;
+    event.url = eventUrl;
+    event.type = eventType;
+    event.location = {};
+    //event.location.address = address;
+    event.location.place = {};
+    event.location.place.name = eventPlace;
+
+    var country = {};
+    country.name = countryName;
+    country.code = countryCode;
+    event.location.place.country = country;
     if (null != locationId) {
-        event.locationId = locationId;
+        event.location.place.idProvider = locationId;
     }
+    eventSubmission.event = event;
 
     // FIXME Replace URL with URL in a MVC context (usually with no .php extension)
     $.ajax({
         url: '/rpc/save_event.php',
         method: 'POST',
-        data : JSON.stringify(event),
+        data : JSON.stringify(eventSubmission),
         dataType: "json",
     })
     .done(function(response) {
