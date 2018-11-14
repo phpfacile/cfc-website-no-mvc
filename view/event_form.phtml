@@ -10,6 +10,13 @@ $event     = $eventSubmission->event;
 <script type="text/javascript" src="/js/cfc.js"></script>
 <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
 <div class="container">
+<?php
+if (property_exists($eventSubmission, 'submissionDateTimeUTC')) {
+?>
+Evénement proposé le: <?php echo $eventSubmission->submissionDateTimeUTC;?><br>
+<?php
+}
+?>
 <form id="event_form" onsubmit="return false" class="needs-validation" novalidate>
 <input type="hidden" id="locale" name="locale" value="<?php echo $escaper->escapeHtmlAttr($eventSubmission->locale); ?>" />
 <?php
