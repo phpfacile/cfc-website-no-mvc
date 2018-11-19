@@ -25,6 +25,7 @@ mysql -u user -p databasename < vendor/phpfacile/geocoding-db-zend/sql/events.my
 With SQLite (for test purpose only), run the following SQL scripts
 * vendor/phpfacile/geocoding-db-zend/sql/locations.sqlite.sql
 * vendor/phpfacile/event-db-zend/sql/events.sqlite.sql
+
 Ex:
 ```
 sqlite3 databasefilename < vendor/phpfacile/geocoding-db-zend/sql/locations.sqlite.sql
@@ -38,11 +39,14 @@ Copy config/autoload/local.php.dist file to config/autoload/local.php and set co
 Launch the web server.
 
 For test purpose, this can be done with the following command
+```
 php -S localhost:8085 -t public
-In that case, then open your web browser at http://localhost:8085/eventform.php
+```
+In that case, then open your web browser at http://localhost:8085/create-event
 
 ## Step 5 ##
 With your favorite web browser go to
-* /create-event.php To test the creation of a new event
-* /backoffice/validate-event.php To test the validation of an event
-* /json/events.php To test retrieval of the event list as JSON
+* /create-event To test the creation of a new event
+* /backoffice/events-to-be-validated To test displaying the list of events to be validated
+* /backoffice/validate-event To test the validation of an event
+* /json/events To test retrieval of the event list as JSON
