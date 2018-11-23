@@ -24,6 +24,14 @@ switch ($_SERVER['REQUEST_URI']) {
         $class = 'AdminController';
         $action = 'listEventsToBeValidatedAction';
         break;
+    case '/login':
+        $class = 'LoginController';
+        $action = 'loginAction';
+        break;
+    case '/logout':
+        $class = 'LoginController';
+        $action = 'logoutAction';
+        break;
     case '/':
     case '':
         die('Welcome');
@@ -47,21 +55,31 @@ use PHPFacile\Openstreetmap\Service\OpenstreetmapService;
 
 use Zend\Db\Adapter\Adapter;
 
-
+$controllerParam2 = null;
 switch ($_SERVER['REQUEST_URI']) {
-    case '/create-event':
-        // Constructor with no parameter
-        $cfcService = null;
+    case '/login':
+    case '/logout':
+        $cfg = include(__DIR__.'/../config/autoload/local.php');
+        // Actually constructor parameter is not a $cfcService
+        $cfcService = $cfg['CFC']['users'];
         break;
-    case '/json/events':
+    case '/create-event':
+        $cfg = include(__DIR__.'/../config/autoload/local.php');
+        // Actually constructor parameter is not a $cfcService
+        $cfcService = $cfg['CFC']['events']['types'];
+        break;
     case '/backoffice/validate-event':
+        $cfg = include(__DIR__.'/../config/autoload/local.php');
+        $controllerParam2 = $cfg['CFC']['events']['types'];
+        // continue
+    case '/json/events':
     case '/backoffice/events-to-be-validated':
     case '/rpc/save-event':
         $cfg = include(__DIR__.'/../config/autoload/local.php');
 
-        $adapter         = new Adapter($cfg['CFC']['adapter']);
-        $eventService    = new EventService($adapter);
-        $cfcService      = new CfcService();
+        $adapter      = new Adapter($cfg['CFC']['adapter']);
+        $eventService = new EventService($adapter);
+        $cfcService   = new CfcService();
         $cfcService->setEventService($eventService);
         break;
 }
@@ -86,6 +104,6 @@ switch ($_SERVER['REQUEST_URI']) {
         $cfcService->setGeocodingService($geocodingService);
         break;
 }
-$controller = new $class($cfcService);
+$controller = new $class($cfcService, $controllerParam2);
 
 $controller->$action();

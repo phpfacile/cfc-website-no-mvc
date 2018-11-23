@@ -3,11 +3,11 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "require": {
-        "phpfacile/cfc-core": "^1.0.2",
+        "phpfacile/cfc-core": "^1.0.4",
         "phpfacile/geocoding": "^1.0.2",
-        "phpfacile/geocoding-db-zend": "^1.0.2",
-        "phpfacile/event-db-zend": "^1.0.4",
-        "phpfacile/openstreetmap": "^1.0.1",
+        "phpfacile/geocoding-db-zend": "^1.0.4",
+        "phpfacile/event-db-zend": "^1.0.5",
+        "phpfacile/openstreetmap": "^1.0.2",
         "php-http/guzzle6-adapter": "^1.1",
         "php-http/message": "^1.7",
         "zendframework/zend-escaper": "^2.6"

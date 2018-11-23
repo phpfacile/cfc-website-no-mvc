@@ -1,3 +1,7 @@
+* EVOL Event types are now defined in configuration file
+* EVOL validator id and validation time is now recorded (the event database has been customized)
+* EVOL Includes a basic authentication form (to access backoffice)
+* EVOL Now use a basic custom router and controllers
 * EVOL Now a list of events (to be validated) is available
 * EVOL Now submission date is displayed (in backoffice)
 * EVOL Events (with more fields) are now created with no geocoding and have to be approved (geocoding is done at this step)

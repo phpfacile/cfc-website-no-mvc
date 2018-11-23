@@ -50,8 +50,14 @@ if (property_exists($eventSubmission, 'id')) {?>
   <label for="event_type" class="col-sm-2 col-form-label">Type<abbr title="requis">*</abbr></label>
   <div class="col-sm-4">
     <select id="event_type" name="event_type">
-        <option val="evt"<?php echo ("evt" === $event->type)?' selected':'';?>>Evénement</option>
-        <option val="grp"<?php echo ("grp" === $event->type)?' selected':'';?>>Groupe</option>
+        <option value="">(sélectionner)</option>
+        <?php
+        foreach ($form->eventTypes as $eventType) {
+?>
+        <option value="<?php echo $eventType;?>" <?php echo ($eventType === $event->type)?' selected':'';?>><?php echo $eventType;?></option>
+<?php
+        }
+        ?>
     </select>
   </div>
   <div id="event_type_feedback" class="feedback col-sm-6"></div>
@@ -111,6 +117,7 @@ if (property_exists($eventSubmission, 'id')) {?>
     <select id="event_country" name="event_country" class="form-control" required>
         <option value="">(sélectionner)</option>
         <option value="FR"<?php echo ("FR" === $event->location->place->country->code)?' selected':'';?>>France</option>
+        <option value="CH"<?php echo ("CH" === $event->location->place->country->code)?' selected':'';?>>Suisse</option>
     </select>
   </div>
   <div id="event_country_feedback" class="feedback col-sm-4"></div>

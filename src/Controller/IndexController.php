@@ -1,10 +1,13 @@
 <?php
+// TODO Use a namespace
 
-class IndexController()
+class IndexController
 {
-    public function __contruct()
-    {
+    protected $eventTypes;
 
+    public function __construct($eventTypes)
+    {
+        $this->eventTypes = $eventTypes;
     }
 
     public function createEventAction()
@@ -16,7 +19,7 @@ class IndexController()
         $event = new \StdClass();
         $event->name = 'My Event created at '.date('Y-m-d H:i:s').' !';
         $event->url = 'http://www.mywebsite.com';
-        $event->type = 'evt';
+        $event->type = $this->eventTypes[0];
         $event->dateStart = '2018-12-08';
         $event->location = new \StdClass();
         $event->location->place = new \StdClass();
@@ -32,6 +35,8 @@ class IndexController()
         $eventSubmission->submitter = $submitter;
         $eventSubmission->event     = $event;
 
+        $form = new \StdClass();
+        $form->eventTypes = $this->eventTypes;
 
         require_once(__DIR__.'/../view/event_form.phtml');
 

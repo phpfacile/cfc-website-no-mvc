@@ -85,7 +85,7 @@ function saveEvent()
 
     // FIXME Replace URL with URL in a MVC context (usually with no .php extension)
     $.ajax({
-        url: '/rpc/save_event.php',
+        url: '/rpc/save-event',
         method: 'POST',
         data : JSON.stringify(eventSubmission),
         dataType: "json",
@@ -119,8 +119,12 @@ function saveEvent()
             });
             // FIXME loop instead of take only 1st err
         } else {
-            // TODO Manage success
-            location.reload();
+            if (null != eventSubmissionId) {
+                location.reload();
+            } else {
+                // TODO Manage success
+                $('body').html('Thanks !');
+            }
         }
     })
     .fail(function(jqXHR, textStatus, errorThrown) {

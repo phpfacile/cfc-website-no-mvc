@@ -13,23 +13,23 @@ composer update
 ### With MySql ###
 With Mysql, run the following SQL scripts
 * vendor/phpfacile/geocoding-db-zend/sql/locations.mysql.sql
-* vendor/phpfacile/event-db-zend/sql/events.mysql.sql
+* vendor/phpfacile/cfc-core/sql/events.mysql.sql (a customized version of vendor/phpfacile/event-db-zend/sql/events.mysql.sql)
 
 Ex:
 ```
 mysql -u user -p databasename < vendor/phpfacile/geocoding-db-zend/sql/locations.mysql.sql
-mysql -u user -p databasename < vendor/phpfacile/geocoding-db-zend/sql/events.mysql.sql
+mysql -u user -p databasename < vendor/phpfacile/cfc-core/sql/events.mysql.sql
 ```
 
 ### With SQLite ###
 With SQLite (for test purpose only), run the following SQL scripts
 * vendor/phpfacile/geocoding-db-zend/sql/locations.sqlite.sql
-* vendor/phpfacile/event-db-zend/sql/events.sqlite.sql
+* vendor/phpfacile/cfc-core/sql/events.sqlite.sql (a customized version of vendor/phpfacile/event-db-zend/sql/events.sqlite.sql)
 
 Ex:
 ```
 sqlite3 databasefilename < vendor/phpfacile/geocoding-db-zend/sql/locations.sqlite.sql
-sqlite3 databasefilename < vendor/phpfacile/geocoding-db-zend/sql/events.sqlite.sql
+sqlite3 databasefilename < vendor/phpfacile/cfc-core/sql/events.sqlite.sql
 ```
 
 ## Step 3 ##

@@ -21,11 +21,27 @@ $cfcService->setEventService($eventService);
 class AdminController
 {
     protected $cfcService;
+    protected $eventTypes;
+    protected $loggedUser;
 
-    public function __construct($cfcService)
+    public function __construct($cfcService, $eventTypes)
     {
+        session_start();
+        $this->eventTypes = $eventTypes;
+
         $this->cfcService = $cfcService;
+
         // TODO Authentication + Access rights check
+        if (false === array_key_exists('userLogin', $_SESSION)) {
+            require_once(__DIR__.'/../view/login_form.phtml');
+            die();
+        }
+
+        // TODO Use a "real" class
+        $user = new \StdClass();
+        $user->login = $_SESSION['userLogin'];
+
+        $this->loggedUser = $user;
     }
 
     public function getNextEventToBeValidatedAction()
@@ -36,6 +52,10 @@ class AdminController
             echo 'No more event to process';
             die();
         }
+
+        $form = new \StdClass();
+        $form->eventTypes = $this->eventTypes;
+
         require_once(__DIR__.'/../view/event_form.phtml');
 
         require_once(__DIR__.'/../view/partials/event_validation_buttons_bar.phtml');
@@ -49,6 +69,8 @@ class AdminController
             echo 'No more event to process';
             die();
         }
+
+        $escaper = new Zend\Escaper\Escaper('utf-8');
         ?>
         <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
         <table class="table">

@@ -30,6 +30,12 @@ return [
             'cache' => [
                 'cache_dir' => __DIR__.'/../../cache',
             ]
+        ],
+        'users' => [
+            [
+                'login'    => 'demo',
+                'password' => ''
+            ]
         ]
     ]
 ];
